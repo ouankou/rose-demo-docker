@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!--
+Supervised by Chunhua Liao,
+Implemented by Manal Abdalla 03/08/2018
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Test ROSE Web Interface</title>
+    <!-- This script is to switch between the input forms -->
+    <script>
+        function showme(){
+	    var choice = document.getElementsByName("question");
+	    var vis = "none";
+	    var vis2 = "block";
+	    for(var i=0;i<choice.length;i++){
+	        if(choice[i].id == "upload" & choice[i].checked){
+		    vis = "block";
+		    vis2 = "none";
+		    break;
+		}
+	    }
+   	    document.getElementById('form2').style.display = vis;
+	    document.getElementById('form1').style.display = vis2;
+
+	}
+    </script>
+  </head>
+
+ <body>
+<!-- form selection mechanism triggor  -->
+Please provide the following information to run the identityTranslator of ROSE:<br>
+Select a method to proceed : <br>
+<form action="#" method="post">
+<input type="radio" id="upload" name="question" onclick="showme()"> Upload a file<br>
+<input type="radio" id="copy" name="question" onclick="showme()"> Copy/paste text (Can handle about 500 lines of code)<br>
+</form>
+
+<!-- copy/paste form  -->
+<div id="form1" style="display:none">
+<form id="form1" action="/cgi-bin/callrose.sh" method="post">
+<br>
+Step 1/3. 
+Input source code (max size allowed: 20,000 characters, roughly 500 lines)<br>
+More Examples Here:<br>
+<select id="temp" onchange= "setTemp()">
+    <option value="0"></option>
+    <option value="1">C++ Example</option>
+    <option value="2">C Example</option>
+</select>
+<br>
+<script src="autosize.js"></script>
+<textarea rows="30" maxlength="20000"  cols="80" name="filecontent" id="program">
+/*a test C++ program. You can replace this content with yours, within 20,000 character limit (about 500 lines) . */
+template <typename T>
+class X
+{
+  public:
+    X();
+    ~X();
+    void foo();
+    X operator+();
+};
+
+X<int>::~X()
+{
+}
+
+X<int>::X()
+{
+}
+
+void X<int>::foo()
+{
+}
+
+X<int> X<int>::operator+( )
+{
+  X<int> x;
+  return x;
+}
+
+</textarea><br>
+
+Step 2/3: Select suffix of the source code <br>
+<input type="radio" name="suffix" id="suffixc" value="c" >.c</input><br>
+<input type="radio" name="suffix" id="suffixcpp" value="cpp" checked>.cpp (C++11 included)</input><br>
+<input type="radio" name="suffix" id="suffixf" value="f">.f</input><br>
+<input type="radio" name="suffix" id="suffixf90" value="f90">.f90</input><br>
+<br>
+Step 3/3:Add options for a finer tuning of the tool:(leave empty to opt out)<br>
+<input type="text" name="options"> <br>
+Check the <a href="#" onclick="document.getElementById('manform').submit();">Manual</a> for usage and options.<br>
+<input type="submit" name="submit" value="Submit"></input>
+</form>
+</div>
+<!--a hidden form that submit a value of the tool name to dynamically generate help page-->
+<form action="/cgi-bin/help_page.sh" method="post" id="manform" target="_blank">
+<input type="hidden" name="tool" value="identityTranslator">
+</form>
+<p>
+
+<!-- upload form  -->
+<div id="form2" style="display:none">
+<form method="post" id="form2" enctype="multipart/form-data" action="/cgi-bin/callrose_upload.sh">
+    Step 1/2: choose a file<br> 
+    <input type="file" name="myfile"><br><br>
+    Step 2/2: add options (leave empty to opt out)<br>
+    Options: <input type="text" name="options"><br><br>
+    <input type="hidden" name="tool" value="identityTranslator">
+    Check the <a href="#" onclick="document.getElementById('manform').submit();">Manual</a> for usage and options.<br><br>
+    <input type="submit" name="submit" value="upload">
+</form>
+</div>
+
+<!--script to change the content of the textarea and suffix onchange from select menu-->
+<script type="text/javascript">
+var code0 = "";
+var code1 = `#include<iostream>
+typedef float Real;
+int main(){
+    int x = 0;
+    bool value = false;
+    for(int i = 0; i < 4; i++)
+    {
+        int x;
+    }
+    return 0;
+}`;
+var code2 = `#include<stdio.h>
+long int multiplyNumbers(int n);
+int main(){
+    int n = 8;
+    printf("Factorial of %d = %ld", n, multiplyNumbers(n));
+    return 0;
+}
+long int multiplyNumbers(int n)
+{
+    if (n>=1)
+      return n*multiplyNumbers(n-1);
+    else
+      return 1;
+}`;
+function setTemp(){
+    var choice = document.getElementById('temp').value;
+    var textcode = document.getElementById('program');
+    if(choice == '0'){
+        textcode.value = code0;
+	document.getElementBuId('suffixc').checked = false;
+	document.getElementById('suffixcpp').checked = false;
+	document.getElementById('suffixf').checked = false;
+	document.getElementById('suffixf90').checked = false;
+    }else if (choice == '1'){
+        textcode.value = code1;
+	document.getElementById('suffixcpp').checked = true;
+    }else if(choice == '2'){
+        textcode.value = code2;
+	document.getElementById('suffixc').checked = true;
+    }
+};
+</script>
+ </body>
+</html>
+

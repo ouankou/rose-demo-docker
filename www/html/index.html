@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Online Demo of ROSE-based Tools</title>
+  </head>
+ <body>
+
+<p>Welcome to the demo page of ROSE-based tools, please follow the links below to try them (Note: many tools are still research prototypes under development):&nbsp;</p>
+<!-- onclick the value attribute will be setup and the form will be submitted  -->
+Program Analysis Tools:
+<p>* <a href="#" onclick="document.getElementById('tool').value = 'identityTranslator'; document.getElementById('toolform').submit();">identityTranslator</a>: the simplest source-to-source translator built using ROSE.</p>
+<p>* <a href="plugin.html">Plugin</a>: develop/build/execute a ROSE-based tool via the <a href="https://en.wikibooks.org/wiki/ROSE_Compiler_Framework/Plugin" target="_blank">plugin mechanism</a> of identityTranslator.</p>
+<p>* <a href="#" onclick="document.getElementById('tool').value = 'dotGenerator'; document.getElementById('toolform').submit();">dotGenerator</a>: simple dot graph of input source code</p>
+<p>* <a href="#" onclick="document.getElementById('tool').value = 'dotGeneratorWholeASTGraph'; document.getElementById('toolform').submit();">dotGeneratorWholeASTGraph</a>: more comprehensive dot graph of input code</p>
+<p>* <a href="#" onclick="document.getElementById('tool').value= 'pdfGenerator'; document.getElementById('toolform').submit();">pdfGenerator</a>: a tool to generate bookmarked pdf file for larger input code</p>
+<p>* <a href="#" onclick="document.getElementById('tool').value='buildCallGraph'; document.getElementById('toolform').submit();">Callgraph Generator</a>: a tool to generate static call graphs</p>
+
+
+Code Generation/Program Transformation/Optimization Tools:
+<p>* <a href="#" onclick="document.getElementById('tool').value='inlineEverything'; document.getElementById('toolform').submit();">AST Inliner</a>: a tool to replace function callsites with bodies of called functions</p>
+<p>*  <a href="#" onclick="document.getElementById('tool').value='outline'; document.getElementById('toolform').submit();">AST Outliner</a>: a tool to extract code portions and make them into functions</p>
+<p>*  <a href="#" onclick="document.getElementById('tool').value='OpenMPLowering'; document.getElementById('toolform').submit();">OpenMP Lowering</a>: a special mode of identityTranslator to translate OpenMP input code</p>
+<p>* <a href="#" onclick="document.getElementById('tool').value='autoPar'; document.getElementById('toolform').submit();">AutoPar</a>: an automatic parallelization tool using OpenMP</p>
+<p>* <a href="#" onclick="document.getElementById('tool').value='loopProcessor'; document.getElementById('toolform').submit();">LoopProcessor</a>: a loop optimization tool to automatically tile, interchange, block, fuse, split loops</p>
+<!--<p>* Fortran-to-C: a cross-language translator: translating Fortran to C</p>-->
+<p>&nbsp;</p>
+<!--hidden form to submit the tool value in the background-->
+<form id="toolform" action="getValues.html" method="get">
+    <input type="hidden" id="tool" name="tool" value="">
+</form>
+ </body>
+</html>
+

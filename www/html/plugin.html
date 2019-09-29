@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!--
+Supervised by Chunhua Liao,
+Implemented by Manal Abdalla 03/08/2018
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Test ROSE Web Interface</title>
+    </head>
+    <body>
+        Please provide the following to write and run your own plugin using ROSE's identityTranslator:<br>
+	<form action="/cgi-bin/plugin.sh" method="post">
+	    Step 1/5: Write or copy/paste your plugin here<br>
+	    <script src="autosize.js"></script>
+	    <textarea rows="50" maxlength="30000" cols="80" name="plugin">
+// An example ROSE plugin
+
+//Mandatory include headers
+#include "rose.h"
+#include "plugin.h"
+
+// optional headers
+#include "RoseAst.h" // using AST Iterator
+#include <iostream>
+
+using namespace std;
+using namespace Rose;
+
+//Step 1. Derive a plugin action from Rose::PluginAction 
+class PrintNamesAction : public Rose::PluginAction {
+    public:
+        PrintNamesAction() {}
+	~PrintNamesAction() {}
+	// This is optional. Need only if your plugin wants to handle options
+	// Provide command line option processing: arg will be the options passed to this plugin
+	bool ParseArgs(const std::vector<std::string> &arg)
+	{
+	    cout<<arg.size()<< " arguments "<<endl;
+	    for (size_t i=0; i< arg.size(); i++)
+	    {
+	      cout<<arg[i]<<endl;
+	    }
+	    return true;
+	};
+	// This is mandatory: providing work in your plugin
+	// Do actual work after ParseArgs();
+	void process (SgProject* n) {
+	    SgNode* node= n;
+	    RoseAst ast(node);
+	    for(RoseAst::iterator i=ast.begin();i!=ast.end();++i) {
+	        SgFunctionDeclaration* fdecl= isSgFunctionDeclaration(*i);
+		if (fdecl && (fdecl->get_definingDeclaration()==fdecl))
+		    cout<<fdecl->get_name()<<endl;
+	    }
+	} // end process()
+};
+
+//Step 2: Declare a plugin entry with a unique name 
+//        Register it under a unique action name plus some description 
+
+static Rose::PluginRegistry::Add<PrintNamesAction>  uniquePluginName1("print-names", "print function names");
+	    </textarea>
+	    <br>
+	    Step 2/5: Enter the plugin action<br>
+	    Plugin Action: <input type="text" name="action" value="print-names"><br><br>
+	    Step 3/5: Enter argument for the given action <br>
+	    Plugin Arg.: <input type="teaxt" name="argument" value="op1"><br><br>
+	    Step 4/5: Input code to the plugin<br>
+	    <textarea rows="30" maxlength="20000"  cols="80" name="filecontent" id="program">
+int foo() {}
+int bar(); 
+int a, b,c;
+	    </textarea><br>
+	    Step 5/5: Select suffix of input code<br>
+	    <input type="radio" name="suffix" value="c" checked>.C</input><br>
+	    <input type="radio" name="suffix" value="cpp">.CPP</input><br>
+	    <input type="submit" name="sub" value="Submit">
+	</form>
+    </body>
+
+</html>

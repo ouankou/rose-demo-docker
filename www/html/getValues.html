@@ -1,0 +1,584 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!--
+Supervised by Chunhua Liao,
+Implemented by Manal Abdalla 03/13/2018
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Test ROSE Web Interface</title>
+    <!-- This script has two functions. showme(), is a function  to switch between the input forms, copy/paste or upload. getVars(), is to get the tool name sent from index.html -->
+    <script>
+        function showme(){
+	    var choice = document.getElementsByName("question");
+	    var vis = "none";
+	    var vis2 = "block";
+	    for(var i=0;i<choice.length;i++){
+	        if(choice[i].id == "upload" & choice[i].checked){
+		    vis = "block";
+		    vis2 = "none";
+		    break;
+		}
+	    }
+   	    document.getElementById('form2').style.display = vis;
+	    document.getElementById('form1').style.display = vis2;
+
+	}
+	function getVars(){
+	    var idx = document.URL.indexOf('?');
+	    var vars = new Array();
+	    if (idx != -1){
+	        var pairs = document.URL.substring(idx+1, document.URL.length).split('&');
+		for (var i=0; i<pairs.length; i++){
+		    nameVal = pairs[i].split('=');
+		    vars[nameVal[0]]=nameVal[1];
+		}
+	    }
+	    return vars;
+	}
+    vars = getVars();
+    var tool = unescape(vars['tool']);
+    </script>
+  </head>
+
+ <body>
+<!-- form selection mechanism triggor  -->
+Please provide the following information to run your Rose-based tool of choice:<br>
+Select a method to proceed : <br>
+<form action="#" method="post">
+<input type="radio" id="upload" name="question" onclick="showme()"> Upload a file<br>
+<input type="radio" id="copy" name="question" onclick="showme()"> Copy/paste text (Can handle about 500 lines of code)<br>
+</form>
+
+<!-- copy/paste form  -->
+<div id="form1" style="display:none">
+<form id="form1" action="/cgi-bin/runtool.sh" method="post">
+<br>
+<p id="message"></p><br>
+Step 1/3. 
+Input source code (max size allowed: 20,000 characters, roughly 500 lines)<br>
+More Examples Here:<br>
+<select id="temp" onchange="setTemp()">
+    <option value="0"></option>
+    <option value="1">C Example</option>
+    <option value="2">C++ Example</option>
+</select>
+<br>
+<script src="autosize.js"></script>
+<textarea rows="30" maxlength="20000"  cols="80" name="filecontent" id="program">
+/*a test C++ program. You can replace this content with yours, within 20,000 character limit (about 500 lines) . */
+template <typename T>
+class X
+{
+  public:
+    X();
+    ~X();
+    void foo();
+    X operator+();
+};
+
+X<int>::~X()
+{
+}
+
+X<int>::X()
+{
+}
+
+void X<int>::foo()
+{
+}
+
+X<int> X<int>::operator+( )
+{
+  X<int> x;
+  return x;
+}
+
+</textarea><br>
+
+Step 2/3: Select suffix of the source code <br>
+<input type="radio" name="suffix" id="suffixc" value="c" >.c</input><br>
+<input type="radio" name="suffix" id="suffixcpp" value="cpp" checked>.cpp (C++11 included)</input><br>
+<input type="radio" name="suffix" id="suffixf" value="f">.f</input><br>
+<input type="radio" name="suffix" id="suffixf90" value="f90">.f90</input><br>
+<br>
+Step 3/3:Add options for a finer tuning of the tool:(leave empty to opt out)<br>
+<input type="text" name="options" id="opt"> <br>
+Check the <a href="#" onclick="document.getElementById('manform').submit();">Manual</a> for usage and options.<br>
+<p id="loop" style="display:none">
+    Quick guide to loop optimization options:
+    <table id="theTable" style="display:none">
+        <tr>
+	    <td>-icl:</td>
+	    <td>Interchange loop</td>
+	</tr>
+	<tr>
+	    <td>-bk1:</td>
+	    <td>Block outer loop</td>
+	</tr>
+	<tr>
+	    <td>-bk2:</td>
+	    <td>Block inner loop</td>
+	</tr>
+	<tr>
+	    <td>-bk3:</td>
+	    <td>Block all loops</td>
+	</tr>
+	<tr>
+	    <td>-fs1:</td>
+	    <td>Single-level fusion</td>
+	</tr>
+	<tr>
+	    <td>-fs2:</td>
+	    <td>Multi-level fusion</td>
+	</tr>
+	<tr>
+	    <td>-splitloop:</td>
+	    <td> Splitting loop</td>
+	</tr>
+	<tr>
+	    <td>-opt:</td>
+	    <td> Level 0 optimization</td>
+	</tr>
+    </table>
+
+<input type="hidden" id="tool" name="tool" value=""><br>
+<input type="submit" name="submit" value="Submit"></input>
+</form>
+</div>
+<!--a hidden form that submit a value of the tool name to dynamically generate help page-->
+<form action="/cgi-bin/help_page.sh" method="post" id="manform" target="_blank">
+<input type="hidden" name="tool" id="helptool" value="">
+</form>
+<p>
+
+<!-- upload form  -->
+<div id="form2" style="display:none">
+<form method="post" id="form2" enctype="multipart/form-data" action="/cgi-bin/callrose_upload.sh">
+<p id="message1"></p><br>
+    Step 1/2: choose a file<br> 
+    <input type="file" name="myfile"><br><br>
+    Step 2/2: add options (leave empty to opt out)<br>
+    Options: <input type="text" name="options"><br><br>
+    <input type="hidden" name="tool" id="tool1" value="">
+    Check the <a href="#" onclick="document.getElementById('manform').submit();">Manual</a> for usage and options<br>
+    <p id="loop1" style="display:none">
+    Quick guide to loop optimization options:
+    <table id="theTable1" style="display:none">
+        <tr>
+	    <td>-icl:</td>
+	    <td>Interchange loop</td>
+	</tr>
+	<tr>
+	    <td>-bk1:</td>
+	    <td>Block outer loop</td>
+	</tr>
+	<tr>
+	    <td>-bk2:</td>
+	    <td>Block inner loop</td>
+	</tr>
+	<tr>
+	    <td>-bk3:</td>
+	    <td>Block all loops</td>
+	</tr>
+	<tr>
+	    <td>-fs1:</td>
+	    <td>Single-level fusion</td>
+	</tr>
+	<tr>
+	    <td>-fs2:</td>
+	    <td>Multi-level fusion</td>
+	</tr>
+	<tr>
+	    <td>-splitloop:</td>
+	    <td> Splitting loop</td>
+	</tr>
+	<tr>
+	    <td>-opt:</td>
+	    <td> Level 0 optimization</td>
+	</tr>
+    </table>
+    </p><br>
+    <input type="submit" name="submit" value="Upload & Run">
+</form>
+</div>
+
+<!--script to change the content of the textarea and suffix onchange from select menu-->
+<script type="text/javascript">
+var code0 = "";
+var code1 =`#include<iostream>
+typedef float Real;
+int main(){
+    int x = 0;
+    bool value = false;
+    for(int i = 0; i < 4; i++)
+    {
+        int x;
+    }
+    return 0;
+}`;
+var code2 =`# define MAX 3000
+int main()
+{
+      int i=0, j=0, n;
+      int arr[MAX];
+      int jumber[MAX];	         
+      while(scanf("%d",&n) == 1)
+      {
+	  for(i = 0; i < n; i++)
+	  {
+	      scanf("%d",&arr[i]);
+	      jumber[i] = 0;
+	  }
+	  int test = 1;
+	  j = n -1;
+	  for(i=0; i< j; i++)
+	  {
+	    jumber[abs(arr[i] - arr[i+1])] = 1;
+	  }
+	  for(i=1; i < n ; i++)
+	  {
+	      if(!jumber[i])
+	      {
+		  test = 0;
+		  break;
+	      }
+	  }
+	  if(test)
+	      printf("Jolly");
+	  else
+	      printf("Not jolly");
+      }
+      return 0;
+}`;
+var code3 =`/*A test C program. You can replace this content with yours, within 20,000 character limit (about 500 lines) . */
+int foo_add(int a, int b)
+{
+    int sum =0;
+    sum = a + b;
+    return sum;
+}
+void foo_do()
+{
+    int x =3;
+    int y =2;
+    int sum = foo_add(x, y);
+}`;
+var code4 =`/*Only the outmost loop can be parallelized.*/
+int n=100, m=100;
+double b[100][100];
+void foo()
+{
+    int i,j;
+    for (i=0;i<n;i++)
+      for (j=0;j<m-1;j++)
+	b[i][j]=b[i][j+1];
+}`;
+var code5 =`/*a test C program. You can replace this content with yours, within 20,000 character limit (about 500 lines) . */
+#include<stdio.h>
+#include<stdlib.h>
+
+int main(int argc, char* argv[])
+{
+    int nthreads, tid;
+    #pragma omp parallel private(nthreads, tid)
+    {
+        tid = omp_get_thread_num();
+	printf("Hello World from thread = %d ", tid);
+	if(tid == 0)
+	{
+	    nthreads = omp_get_num_threads();
+	    printf("Number of threads = %d", nthreads);
+	}
+    }
+    return 0;
+}`;
+var code6 =`/*a test C++ program with an outlining target. You can replace this content with yours, within 20,000 character limit (about 500 lines) . */
+
+#include <iostream>
+
+size_t factorial (size_t n)
+{
+    size_t i =1;
+    size_t r =1;
+    while (1)
+    {
+#pragma rose_outline
+      if (i <= 1)
+	break;
+      else if (i >= n)
+	break;
+      else
+	r *= ++i;
+    }
+    return r;
+}
+
+int main (int argc, char* argv[])
+{
+     factorial(7);
+        return 0;
+}`;
+var code7 =`/*a test C program. You can replace this content with yours, within 20,000 character limit (about 500 lines) . */
+
+#define N 50
+
+void printmatrix (double x[][N]);
+void initmatrix (double x[][N], double s);
+
+main()
+{
+  int i, j, k;
+  double a[N][N], b[N][N], c[N][N];
+  double s;
+  s = 235.0;
+  initmatrix (a, s);
+  s = 231.0;
+  initmatrix (b, s);
+  printmatrix(a);
+  printmatrix(b);
+  for(i =0; i<= N-1; i+=1){
+    for(j=0; j <=N-1; j+=1){
+      for(k =0; k <=N-1; k+=1){
+	c[i][j] = c[i][j] + a[i][k] * b[k][j];
+      }
+    }
+  }
+  printmatrix(c);
+}`;
+var code8 =`using namespace std;
+
+unsigned long long factcalc (unsigned int num)
+{
+      unsigned int n = num;
+      unsigned long long result;
+      for(int i = 1; i <=n; ++i)
+      {
+	result *= i;
+      }
+      return result;
+}
+
+int main()
+{
+       
+        unsigned long long factorial = 1;
+	factorial =  factcalc(12);
+	return 0;
+}`;
+
+var code9 =`int main()
+{
+    double n, start=1, total;
+    double unlucky=0, lucky;
+    double *number;
+	                 
+    scanf("%lf",&n);                    
+    total = 9;                      
+    for(int j =1; j < n; j++)
+    {
+      total = total * 10;
+      start = start *10;
+    }
+
+    number = (double*)malloc(n * sizeof(double));                           
+    for(double i = start; i < start*10; i++)
+    {
+      double temp = i;
+#pragma rose_outline
+      for(int j = 1; j<= n; j++)
+      {
+	number[j]=(int)temp%10;
+	temp = temp/10;
+      }
+      for(int k = n; k>=1; k--)
+      {
+	if(number[k] == 1 && number[k-1] == 3){
+	  unlucky++;
+	  break;
+	}
+      }
+    }                                   
+    lucky = total - unlucky;
+    printf("there are %f lucky integers in %f digits integers", lucky, n);
+    return 0;
+}`;
+
+var code10 =`#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main () 
+{
+        int n=400000,  m=1000; 
+	double x=0,y=0;
+	double s=0;
+	vector< double > shifts(n,0);
+
+#pragma omp parallel for reduction(+:x,y)
+	for (int j=0; j<n; j++) {
+	  double r=0.0;
+	  for (int i=0; i < m; i++){
+	    double rand_g1 = cos(i/double(m));
+	    double rand_g2 = sin(i/double(m));    
+	    x += rand_g1;
+	    y += rand_g2;
+	    r += sqrt(rand_g1*rand_g1 + rand_g2*rand_g2);
+	  }
+	  shifts[j] = r / m;
+	}
+	*std::max_element( shifts.begin(), shifts.end() );
+}`;
+
+var code11 =`#include <iostream>
+using namespace std;
+
+int main()
+{
+        int a[10][10], b[10][10], mult[10][10], r1, c1, r2, c2, i, j, k;
+	cout << "Enter rows and columns for first matrix: ";
+	cin >> r1 >> c1;
+	cout << "Enter rows and columns for second matrix: ";
+	cin >> r2 >> c2;
+	// If column of first matrix in not equal to row of second matrix,
+	// ask the user to enter the size of matrix again.
+	while (c1!=r2)
+	{
+	  cout << "Error! column of first matrix not equal to row of second.";
+	  cout << "Enter rows and columns for first matrix: ";
+	  cin >> r1 >> c1;
+	  cout << "Enter rows and columns for second matrix: ";
+	  cin >> r2 >> c2;
+	}
+	// Storing elements of first matrix.
+	cout << endl << "Enter elements of matrix 1:" << endl;
+	for(i = 0; i < r1; ++i)
+	  for(j = 0; j < c1; ++j)
+	  {
+	    cout << "Enter element a" << i + 1 << j + 1 << " : ";
+	    cin >> a[i][j];
+	  }
+	// Storing elements of second matrix.
+	cout << endl << "Enter elements of matrix 2:" << endl;
+	for(i = 0; i < r2; ++i)
+	  for(j = 0; j < c2; ++j)
+	  {
+	    cout << "Enter element b" << i + 1 << j + 1 << " : ";
+	    cin >> b[i][j];
+	  }
+	// Initializing elements of matrix mult to 0.
+	for(i = 0; i < r1; ++i)
+	  for(j = 0; j < c2; ++j)
+	  {
+	    mult[i][j]=0;
+	  }
+	// Multiplying matrix a and b and storing in array mult.
+	for(i = 0; i < r1; ++i)
+	  for(j = 0; j < c2; ++j)
+	    for(k = 0; k < c1; ++k)
+	    {
+	      mult[i][j] += a[i][k] * b[k][j];
+	    }
+	// Displaying the multiplication of two matrix.
+	cout << endl << "Output Matrix: " << endl;
+	for(i = 0; i < r1; ++i)
+	  for(j = 0; j < c2; ++j)
+	  {
+	    cout << " " << mult[i][j];
+	    if(j == c2-1)
+	      cout << endl;
+	  }
+	return 0;
+}`;
+
+function setTemp(){
+    var choice = document.getElementById('temp').value;
+    var textcode = document.getElementById('program');
+     if(choice == '0'){
+        textcode.value = code0;
+	document.getElementBuId('suffixc').checked = false;
+	document.getElementById('suffixcpp').checked = false;
+	document.getElementById('suffixf').checked = false;
+	document.getElementById('suffixf90').checked = false;
+}else if( choice == '2' && tool == "identityTranslator"){
+            textcode.value = code1;
+	    document.getElementById('suffixcpp').checked = true;
+}else if( choice == '1' && tool == "identityTranslator"){
+	    textcode.value = code4;
+	    document.getElementById('suffixc').checked = true;
+}else if( choice == '1' && tool == "dotGenerator"){
+            textcode.value = code2;
+	    document.getElementById('suffixc').checked = true;
+}else if( choice == '2' && tool == "dotGenerator"){
+	    textcode.value = code8;
+	    document.getElementById('suffixcpp').checked = true;
+}else if( choice == '1' && tool == "dotGeneratorWholeASTGraph"){
+            textcode.value = code3;
+	    document.getElementById('suffixc').checked = true;
+}else if( choice == '2' && tool == "dotGeneratorWholeASTGraph"){
+	    textcode.value = code8;
+	    document.getElementById('suffixcpp').checked = true;
+}else if( choice == '1' && tool == "pdfGenerator"){
+            textcode.value = code2;
+	    document.getElementById('suffixc').checked = true;
+}else if( choice == '2' && tool == "pdfGenerator"){
+	    textcode.value = code1;
+	    document.getElementById('suffixcpp').checked = true;
+}else if( choice == '1' && tool == "buildCallGraph"){
+            textcode.value = code2;
+	    document.getElementById('suffixc').checked = true;
+}else if( choice == '2' && tool == "buildCallGraph"){
+	    textcode.value = code8;
+	    document.getElementById('suffixcpp').checked = true;
+}else if( choice =='1' && tool == "inlineEverything"){
+            textcode.value = code3;
+	    document.getElementById('suffixc').checked = true;
+}else if( choice == '2' && tool == "inlineEverything"){
+	    textcode.value = code8;
+	    document.getElementById('suffixcpp').checked = true;
+}else if( choice == '1' && tool == "outline"){
+	    textcode.value = code9;
+	    document.getElementById('suffixc').checked = true;
+}else if( choice == '2' && tool == "outline"){
+	    textcode.value = code6;
+	    document.getElementById('suffixcpp').checked = true;
+}else if( choice == '1' && tool == "OpenMPLowering"){
+	    textcode.value = code5;
+	    document.getElementById('suffixc').checked = true;
+}else if( choice == '2' && tool == "OpenMPLowering"){
+	    textcode.value = code10;
+	    document.getElementById('suffixcpp').checked = true;
+}else if( choice == '1' && tool == "autoPar"){
+	    textcode.value = code4;
+	    document.getElementById('suffixc').checked = true;
+}else if( choice == '2' && tool == "autoPar"){
+	    textcode.value = code8;
+	    document.getElementById('suffixcpp').checked = true;
+}else if( choice == '1' && tool == "loopProcessor"){
+            textcode.value = code7;
+ 	    document.getElementById('opt').value = "-bk1 -fs1";
+	    document.getElementById('suffixc').checked = true;
+}else if( choice == '2' && tool == "loopProcessor"){
+	    textcode.value = code11;
+	    document.getElementById('opt').value = "-bk1 -opt";
+	    document.getElementById('suffixcpp').checked = true;
+	}
+}
+if( tool == "loopProcessor"){
+    document.getElementById('loop').style.display="block";
+    document.getElementById('theTable').style.display="block";
+    document.getElementById('loop1').style.display="block";
+    document.getElementById('theTable1').style.display="block";
+}
+document.getElementById('message').innerHTML = "Follow steps to run " + tool + " ";
+document.getElementById('message1').innerHTML = "Follow steps to run " + tool + " ";
+document.getElementById('tool').value = tool;
+document.getElementById('tool1').value = tool;
+document.getElementById('helptool').value = tool;
+</script>
+ </body>
+</html>
+
