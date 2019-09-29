@@ -3,9 +3,9 @@ ROSE demo in a docker, which can be developed and deployed easier.
 
 docker-compose:
 
-1. nginx docker, outer docker
-1. main website, html5, css3, fastCGI (external files, mounted to nginx for live updates)
-1. rose docker, run as microservice, complete the task given by nignx, inner docker
+1. Official nginx docker, outer docker, base on Alpine for simplicity, pull from docker hub.
+1. Main website, html5, css3, fastCGI (external files, mounted to nginx for live updates)
+1. ROSE docker, run as microservice, complete the task given by nignx, inner docker, customized based on Ubuntu 16.04, expired in one hour or less.
 
 
 ## Deployment without Docker
