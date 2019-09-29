@@ -34,3 +34,9 @@ Restart Apache2.
 ```bash
 sudo systemctl restart apache2
 ```
+
+## Deployment with Docker
+
+#### Communication between nested dockers
+
+Single file can't be passed into a docker container. For each service request, we could create a unique temporary folder ```foo``` having that file in ```/tmp``` in the outer docker and then share the folder ```foo``` with inner docker. The output is also put in the same folder. Outer docker can return it to the corresponding user. 
