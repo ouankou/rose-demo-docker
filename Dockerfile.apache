@@ -3,8 +3,3 @@
 FROM httpd:alpine
 
 # Configuration
-RUN echo "ScriptAlias  /cgi-bin/ /usr/local/apache2/htdocs/cgi-bin/" >> /usr/local/apache2/apache2.conf \
-    && echo "<Directory /usr/local/apache2/htdocs/cgi-bin/>" >> /usr/local/apache2/apache2.conf \
-    && echo "Options ExecCGI" >> /usr/local/apache2/apache2.conf \
-    && echo "AddHandler cgi-script cgi pl" >> /usr/local/apache2/apache2.conf \
-    && echo "</Directory>" >> /usr/local/apache2/apache2.conf

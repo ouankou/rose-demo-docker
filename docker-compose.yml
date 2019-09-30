@@ -3,17 +3,15 @@ services:
     apache2:
         container_name: demo_apache
         image: httpd:rose-apache
-        #image: httpd:alpine
         ports:
             - "5030:80"
         volumes:
-            #- ./www:/var/www
             - ./www/html:/usr/local/apache2/htdocs/
+            - ./www/cgi-bin:/usr/local/apache2/cgi-bin
             
     demo:
-        # pwd daemon container always needs to be named this way
         container_name: test_demo
-        # use the latest golang image
+        # ROSE compiler image
         image: golang
         #volumes:
 volumes:
