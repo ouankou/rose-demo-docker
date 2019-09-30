@@ -1,0 +1,7 @@
+
+ScriptAlias  /cgi-bin/ /var/www/cgi-bin/
+<Directory /var/www/cgi-bin/>
+        Options ExecCGI
+        AddHandler cgi-script cgi pl
+</Directory>
+
