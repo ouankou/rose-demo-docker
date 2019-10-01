@@ -6,8 +6,9 @@ services:
         ports:
             - "5030:80"
         volumes:
-            - ./www/html:/usr/local/apache2/htdocs/
-            - ./www/cgi-bin:/usr/local/apache2/cgi-bin
+            - ./rose_www/html:/usr/local/apache2/htdocs/
+            - ./rose_www/cgi-bin:/usr/local/apache2/cgi-bin
+            - /var/run/docker.sock:/var/run/docker.sock
             
     demo:
         container_name: test_demo

@@ -220,7 +220,10 @@ echo "debug: ${Final_Command}" >> $LOG_FILE
 echo  "start running the translator  ..." >> $LOG_FILE
 echo  `date` >> $LOG_FILE
 
+Final_Command="docker run testdemo vi --help &>/tmp/test$mypid.$suffix.output"
 eval ${Final_Command}
+#eval $(docker run testdemo vi --help)
+
 
 # must immediately check the error code
 if [ $? -eq 0 ]

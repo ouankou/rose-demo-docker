@@ -7,12 +7,25 @@ docker-compose:
 1. Main website, html5, css3, fastCGI (external files, mounted to nginx for live updates)
 1. ROSE docker, run as microservice, complete the task given by nignx, inner docker, customized based on Ubuntu 16.04, expired in one hour or less.
 
+## Build dockers
+
+Build the customized Apache2 docker image.
+
+```bash
+docker build -t httpd:rose-apache -f Dockerfile.apache .
+```
+
+Build the customized ROSE docker image.
+
+```bash
+docker build -t rose-demo:release -f Dockerfile.rose .
+```
 
 ## Deployment without Docker
 
 #### Prerequisite
 
-Apache2
+Apache2, Docker, docker-compose
 
 ### Configuration
 
