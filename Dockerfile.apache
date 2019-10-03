@@ -3,3 +3,5 @@
 FROM httpd:alpine
 
 # Configuration
+RUN apk add \
+    docker

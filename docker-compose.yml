@@ -11,10 +11,11 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock
             
     demo:
-        container_name: test_demo
+        container_name: demo_rose
         # ROSE compiler image
-        image: golang
-        #volumes:
+        image: rosedev:0.1
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
 volumes:
     sessions:
     networks:
