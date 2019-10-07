@@ -8,8 +8,7 @@ services:
             - "5030:80"
         volumes:
             - ./rose_www:/var/www/localhost
-        command:
-            - --experimental
+        command: --experimental
 
 volumes:
     sessions:

@@ -9,3 +9,6 @@ RUN apk add --no-cache \
 COPY rose_httpd.conf /etc/apache2/httpd.conf
 
 USER rootless
+
+WORKDIR /home/rootless/rose
+COPY Dockerfile.rose .

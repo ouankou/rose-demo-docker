@@ -1,5 +1,91 @@
 
-# Pull base image
+# Environment for ROSE compiler development.
+
+# Pull base image.
 FROM ubuntu:16.04
 
-# Configuration
+# Install packages.
+RUN apt-get update && \
+    apt-get install -y \
+        apt-utils \
+        dialog \
+        python-software-properties \
+        software-properties-common && \
+    apt-get install -y openjdk-8-jdk && \
+    apt-get install -y \
+        autoconf \
+        automake \
+        autotools-dev \
+        bc \
+        binutils \
+        bison \
+        build-essential \
+        cmake \
+        cpufrequtils \
+        curl \
+        device-tree-compiler \
+        dkms \
+        doxygen \
+        flex \
+        gawk \
+        gcc-multilib \
+        gdb \
+        gfortran \
+        ghostscript \
+        git \
+        gperf \
+        graphviz \
+        libboost-all-dev \
+        libgmp-dev \
+        libhpdf-dev \
+        libmpc-dev \
+        libmpfr-dev \
+        libomp-dev \
+        libtool \
+        libxml2-dev \
+        patchutils \
+        perl-doc \
+        python3-dev \
+        sqlite \
+        texinfo \
+        unzip \
+        vim \
+        wget \
+        zip \
+        zlib1g \
+        zlib1g-dev && \
+  rm -rf /var/lib/apt/lists/* && \
+  rm -rf /var/cache/*
+
+# Setup environment
+ENV ROSE_SRC /rose/rose_src
+ENV ROSE_PATH /rose/rose_install
+ENV ROSE_BUILD /rose/rose_build
+ENV PATH $ROSE_PATH/bin:$PATH
+ENV LD_LIBRARY_PATH $ROSE_PATH/lib:$LD_LIBRARY_PATH
+ENV LIBRARY_PATH $ROSE_PATH/lib:$LIBRARY_PATH
+
+# Define commonly used JAVA_HOME variable
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
+ENV LD_LIBRARY_PATH $JAVA_HOME/jre/lib/amd64/server:/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
+
+RUN mkdir -p $ROSE_PATH && \
+    mkdir -p $ROSE_BUILD && \
+    git clone https://github.com/rose-compiler/rose.git $ROSE_SRC && \
+    cd $ROSE_SRC && \
+    ./build && \
+    cd $ROSE_BUILD && \
+    $ROSE_SRC/configure --prefix=$ROSE_PATH --with-boost=/usr --with-boost-libdir=/usr/lib/x86_64-linux-gnu/ --enable-languages=c,c++,fortran --enable-projects-directory --disable-tests-directory --disable-tutorial-directory --enable-edg_version=5.0 --with-gomp_omp_runtime_library=/usr/lib/gcc/x86_64-linux-gnu/5
+# Compile ROSE
+RUN cd $ROSE_BUILD && \
+    make core -j4 && \
+    make install-core && \
+    make install-tools
+
+# Username doesn't need to be defined. The host user has to be passed into Docker for correct file permissions.
+
+# Define working directory.
+WORKDIR /rose
+
+# Define default command.
+CMD ["bash"]
