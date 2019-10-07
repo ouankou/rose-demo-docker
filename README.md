@@ -1,55 +1,52 @@
 # rose-demo-docker
 ROSE demo in a docker, which can be developed and deployed easier.
 
-docker-compose:
+## Components
 
-1. Official nginx docker, outer docker, base on Alpine for simplicity, pull from docker hub.
-1. Main website, html5, css3, fastCGI (external files, mounted to nginx for live updates)
-1. ROSE docker, run as microservice, complete the task given by nignx, inner docker, customized based on Ubuntu 16.04, expired in one hour or less.
+1. Outer docker, base on the official dind-rootless docker, which is based on Alpine Linux. It's pulled from docker hub. Apache2 is installed later as webserver.
+1. Main website, html5, css3, CGI scripts (external files, mounted to the outer docker for live updates).
+1. ROSE docker, run as microservice, complete the task given by outer docker. It runs in rootless mode as inner docker. It's customized based on Ubuntu 16.04.
 
 ## Build dockers
 
-Build the customized Apache2 docker image.
+Build the customized dind-rootless docker image.
 
 ```bash
-docker build -t httpd:rose-apache -f Dockerfile.apache .
+# enter the repo root folder
+sudo docker build -t rose-demo . -f Dockerfile.dind
 ```
 
-Build the customized ROSE docker image.
+(Work-in-Progress) Build the customized ROSE docker image.
 
 ```bash
-docker build -t rose-demo:release -f Dockerfile.rose .
+#docker build -t rose-demo:release -f Dockerfile.rose .
 ```
 
-## Deployment without Docker
+## Deployment
 
-#### Prerequisite
-
-Apache2, Docker, docker-compose
-
-### Configuration
-
-Copy the ```www``` folder to ```/var/www```.
-
-Insert the following lines to ```/etc/apache2/apache2.conf``` for CGI support.
+#### Start the outer docker
 
 ```bash
-ScriptAlias  /cgi-bin/ /var/www/cgi-bin/
-<Directory /var/www/cgi-bin/>
-        Options ExecCGI
-        AddHandler cgi-script cgi pl
-</Directory>
-
+# enter the repo root folder
+sudo docker run -it --name demo_dind --privileged -p 5030:80 -v ~/Projects/rose-demo-docker/rose_www:/var/www/localhost rose-demo --experimental
 ```
 
-Restart Apache2.
+#### Start the webserver
 
 ```bash
-sudo systemctl restart apache2
+sudo docker exec -it --user root:root demo_dind httpd
 ```
 
-## Deployment with Docker
-
-#### Communication between nested dockers
+#### (Work-in-Progress) Communication between nested dockers
 
 Single file can't be passed into a docker container. For each service request, we could create a unique temporary folder ```foo``` having that file in ```/tmp``` in the outer docker and then share the folder ```foo``` with inner docker. The output is also put in the same folder. Outer docker can return it to the corresponding user. 
+
+
+## Access the Demo
+
+After local deployment, access the address localhost:5030.
+For a trial run,
+ 1. go the identityTranslator demo.
+ 1. copy/paste any code in the text box.
+ 1. click submit
+ 1. In the ```Compilation message``` box, it shows the output from running hello-world inner docker.
