@@ -220,10 +220,11 @@ echo "debug: ${Final_Command}" >> $LOG_FILE
 echo  "start running the translator  ..." >> $LOG_FILE
 echo  `date` >> $LOG_FILE
 
-#Final_Command="docker run demo_rose vi --help &>/tmp/test$mypid.$suffix.output"
 Final_Command="id &>/tmp/test$mypid.$suffix.output"
+# Run Hello-World docker instead of actual command.
+# Comment out the following line to disable this inner rootless docker test.
+Final_Command="docker -H unix:///run/user/$(id -u $(whoami))/docker.sock run hello-world &>/tmp/test$mypid.$suffix.output"
 eval ${Final_Command}
-#eval $(docker run testdemo vi --help)
 
 
 # must immediately check the error code

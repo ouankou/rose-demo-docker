@@ -1,0 +1,11 @@
+FROM docker:dind-rootless
+
+USER root
+RUN apk add --no-cache \
+    apache2 \
+    bash \
+    && apk upgrade
+
+COPY rose_httpd.conf /etc/apache2/httpd.conf
+
+USER rootless

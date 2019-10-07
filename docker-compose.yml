@@ -1,21 +1,16 @@
 version: '3.4'
 services:
     apache2:
-        container_name: demo_apache
-        image: httpd:rose-apache
+        container_name: demo_dind
+        image: rose-demo
+        privileged: true
         ports:
             - "5030:80"
         volumes:
-            - ./rose_www/html:/usr/local/apache2/htdocs/
-            - ./rose_www/cgi-bin:/usr/local/apache2/cgi-bin
-            - /var/run/docker.sock:/var/run/docker.sock
-            
-    demo:
-        container_name: demo_rose
-        # ROSE compiler image
-        image: rosedev:0.1
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
+            - ./rose_www:/var/www/localhost
+        command:
+            - --experimental
+
 volumes:
     sessions:
     networks:
