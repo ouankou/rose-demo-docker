@@ -1,0 +1,37 @@
+
+# Environment for the metaservice using Flask.
+
+# Pull base image.
+FROM ubuntu:20.04
+
+# Add user
+RUN groupadd -g 9999 rose && \
+    useradd -r -u 9999 -g rose -m -d /home/rose rose
+
+# Install packages.
+RUN \
+    apt-get update && \
+    apt-get install -y \
+        git \
+        python3-flask \
+        python3-requests \
+        npm \
+        vim \
+        wget && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /var/cache/*
+
+# Switch user and working directory.
+USER rose
+WORKDIR /home/rose
+COPY --chown=rose:rose [".bashrc", "/home/rose/"]
+
+# Define default command.
+CMD ["bash"]
+
+COPY --chown=rose:rose ["front-end-demo", "/home/rose/frontend"]
+
+RUN cd /home/rose/frontend/ && \
+    npm install module
+
+ENTRYPOINT cd /home/rose/frontend && npm start && /bin/bash
