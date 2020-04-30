@@ -57,12 +57,13 @@ The frontend is developed using React.
 
 #### Build
 
+A docker image ready for use has been pushed to DockerHub.
 ```bash
-docker build -t frontenddemo -f Dockerfile.frontend .
+docker pull ouankou/rose:frontend
 ```
 
 #### Run
-The React app uses the 5000 port by default. A proper prot on the host should be mapped to that port in the docker container.
+The React app uses the 5000 port by default. A proper port on the host should be mapped to that port in the docker container.
 ```bash
-docker run -d -p 5000:5000 --name reactdemo frontenddemo
+docker run -d -p 5000:5000 --name rose-react ouankou/rose:frontend
 ```

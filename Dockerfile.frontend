@@ -29,7 +29,7 @@ COPY --chown=rose:rose [".bashrc", "/home/rose/"]
 COPY --chown=rose:rose ["front-end-demo", "/home/rose/frontend"]
 
 WORKDIR /home/rose/frontend
-RUN npm install module && \
+RUN npm ci && \
     npm run build
 
 # Define default command.
