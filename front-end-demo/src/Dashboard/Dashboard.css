@@ -19,6 +19,9 @@ body {
 }
 
 .opts {
+    display: flex;
+    justify-content: left;
+    align-items: stretch;
     padding-left: 10px;
     padding-right: 10px;
     background: #91d5ff;

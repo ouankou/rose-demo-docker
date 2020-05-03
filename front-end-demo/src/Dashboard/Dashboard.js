@@ -2,7 +2,7 @@ import React from 'react';
 import {Button, Select} from 'antd';
 import 'antd/dist/antd.css';
 import './Dashboard.css';
-import { ToolOutlined} from '@ant-design/icons'
+import { ToolOutlined, UploadOutlined, RotateRightOutlined, SaveOutlined, HomeOutlined} from '@ant-design/icons'
 
 const Option = Select.Option;
 
@@ -46,13 +46,14 @@ class Dashboard extends React.Component {
                 
                 </div>
                 <div className = "opts">
-                    <Button>Home</Button>
-                    <Button>Upload</Button>
-                    <Button>Save</Button>
+                    <Button><HomeOutlined /></Button>
+                    <Button><UploadOutlined /></Button>
+                    <Button><SaveOutlined /></Button>
+                    <Button type="primary">Compile</Button>
+                    <Button style = {{flexGrow: 1}}></Button>
                     <Button
                         onClick = {() => this.Onclk()}
-                    >Rotate</Button>
-                    <Button type="primary">Compile</Button>
+                    ><RotateRightOutlined /></Button>
                 </div>
                 <div className = "tags">
                     <Select
