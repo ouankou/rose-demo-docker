@@ -30,6 +30,12 @@ class Dashboard extends React.Component {
 
     componentDidMount() {
         this.screenChange();
+
+        if (document.body.clientWidth <= 700) {
+            this.setState({myDisplay: 'column'});
+        } else {
+            this.setState({myDisplay: 'row'});
+        }
     };
 
     componentWillUnmount() {
