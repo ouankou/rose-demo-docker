@@ -1,5 +1,5 @@
 body {
-    background: #e6f7ff;
+    background: #ffffff;
 }
 
 .logo {
@@ -14,7 +14,7 @@ body {
 }
 
 .divider {
-    padding: 10px;
+    padding: 16px;
     background: #69c0ff;
 }
 
@@ -24,17 +24,29 @@ body {
     background: #91d5ff;
 }
 
-.textbox {
-    height: 530px;
-    width: 630px;
-}
-
-.texts {
-    display: inline-flex;
-    flex-direction: row;
+.tags {
     padding-left: 10px;
     padding-right: 10px;
     background: #bae7ff;
+}
+
+.inputbox {
+    flex-grow: 1;
+    height: 480px;
+}
+
+.outputbox {
+    flex-grow: 1;
+    height: 480px;
+}
+
+.texts {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    padding-left: 10px;
+    padding-right: 10px;
+    background: #e6f7ff;
 }
 
 textarea { resize: none; }
