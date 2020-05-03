@@ -50,3 +50,20 @@ For a trial run,
  1. copy/paste any code in the text box.
  1. click submit
  1. In the ```Compilation message``` box, it shows the output from running hello-world inner docker.
+
+## Dockerize the frontend
+
+The frontend is developed using React.
+
+#### Build
+
+A docker image ready for use has been pushed to DockerHub.
+```bash
+docker pull ouankou/rose:frontend
+```
+
+#### Run
+The React app uses the 5000 port by default. A proper port on the host should be mapped to that port in the docker container.
+```bash
+docker run -d -p 5000:5000 --name rose-react ouankou/rose:frontend
+```
