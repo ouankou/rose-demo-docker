@@ -19,12 +19,36 @@ children.push(<Option key="8">LIB:MKL</Option>);
 
 class Dashboard extends React.Component {
     state = {
-        myDisplay: 'row'
+        myDisplay: 'row',
+        myWidth: 0
     };
     
-    componentDidMount() {
-        
+    constructor(props) {
+        super(props);
+        this.resize.bind(this);
     };
+
+    componentDidMount() {
+        this.screenChange();
+    };
+
+    componentWillUnmount() {
+        window.removeEventListener('resize',this.resize);
+    };
+    
+    resize  = () => {
+        this.setState({myWidth: document.body.clientWidth});
+        console.log(this.state.myWidth);
+        if (this.state.myWidth <= 700) {
+            this.setState({myDisplay: 'column'});
+        } else {
+            this.setState({myDisplay: 'row'});
+        }
+    };
+
+    screenChange = () => {
+        window.addEventListener('resize', this.resize);
+    }
               
     Onclk = () => {
        if (this.state.myDisplay == 'row') {
@@ -42,18 +66,12 @@ class Dashboard extends React.Component {
                 <div className = "logo">
                     <b><ToolOutlined /> | onlineCompiler</b>
                 </div>
-                <div className = "divider">
-                
-                </div>
                 <div className = "opts">
                     <Button><HomeOutlined /></Button>
                     <Button><UploadOutlined /></Button>
                     <Button><SaveOutlined /></Button>
+                    <Button onClick = {() => this.Onclk()} ><RotateRightOutlined /></Button>
                     <Button type="primary">Compile</Button>
-                    <Button style = {{flexGrow: 1}}></Button>
-                    <Button
-                        onClick = {() => this.Onclk()}
-                    ><RotateRightOutlined /></Button>
                 </div>
                 <div className = "tags">
                     <Select

@@ -9,19 +9,12 @@ body {
     padding-top: 15px;
     padding-left: 10px;
     padding-right: 10px;
+    padding-bottom: 12px;
     background: #40a9ff;
     color: #fff;
 }
 
-.divider {
-    padding: 7px;
-    background: #40a9ff;/*#69c0ff;*/
-}
-
 .opts {
-    display: flex;
-    justify-content: left;
-    align-items: stretch;
     padding-left: 10px;
     padding-right: 10px;
     background: #91d5ff;
