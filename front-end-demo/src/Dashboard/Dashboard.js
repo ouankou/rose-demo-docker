@@ -60,7 +60,7 @@ class Dashboard extends React.Component {
                       mode="multiple"
                       style={{ width: '100%' }}
                       placeholder="Please select compile configurations"
-                      defaultValue={['COMPILER:GCC8.0', 'RUNTIME:LLVM']}
+                      defaultValue={['1', '5']}
                     >
                       {children}
                     </Select>

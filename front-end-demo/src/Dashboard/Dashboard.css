@@ -14,8 +14,8 @@ body {
 }
 
 .divider {
-    padding: 16px;
-    background: #69c0ff;
+    padding: 7px;
+    background: #40a9ff;/*#69c0ff;*/
 }
 
 .opts {
