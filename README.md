@@ -19,10 +19,16 @@ sudo docker build -t rose-demo . -f Dockerfile.dind
 (Work-in-Progress) Build the customized ROSE docker image.
 
 ```bash
-#docker build -t rose-demo:release -f Dockerfile.rose .
+docker build -t rose-demo -f Dockerfile.rose .
 ```
 
 ## Deployment
+
+#### Start the single-layer docker
+
+```bash
+docker run -it rose-demo bash
+```
 
 #### Start the outer docker
 
