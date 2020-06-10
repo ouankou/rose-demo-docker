@@ -16,6 +16,16 @@ LOG_FILE=/tmp/help_page.sh.${mypid}.log
 tmp_input0_nosuffix="/tmp/test0$mypid"
 tmp_input_nosuffix="/tmp/test$mypid"
 
+# make sure the directory exist
+
+DIR="/tmp/man_pages"
+
+if [ -d "$DIR" ]; then
+ rm -rf "$DIR"
+ mkdir "$DIR"
+else
+ mkdir "$DIR"
+fi
 
 #------------------------------------------------------------------------------
 # a function to display a file within a textarea
