@@ -1,6 +1,20 @@
 # rose-demo-docker
 ROSE demo in a docker, which can be developed and deployed easier.
 
+### Create ROSE docker image
+
+```bash
+docker build -t rose-demo -f Dockerfile.rose .
+```
+
+### Start the ROSE docker container
+
+```bash
+docker run -it rose-demo bash
+```
+
+# The rest of instructions are out-dated and need significant revision first.
+
 ## Components
 
 1. Outer docker, base on the official dind-rootless docker, which is based on Alpine Linux. It's pulled from docker hub. Apache2 is installed later as webserver.
