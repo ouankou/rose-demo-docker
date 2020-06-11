@@ -565,6 +565,12 @@ function setTemp(){
 	    textcode.value = code11;
 	    document.getElementById('opt').value = "-bk1 -opt";
 	    document.getElementById('suffixcpp').checked = true;
+}else if( choice == '1' && tool == "preprocessingInfoDumper"){
+            textcode.value = code5;
+            document.getElementById('suffixc').checked = true;
+}else if( choice == '2' && tool == "preprocessingInfoDumper"){
+            textcode.value = code10;
+            document.getElementById('suffixcpp').checked = true;
 	}
 }
 if( tool == "loopProcessor"){
